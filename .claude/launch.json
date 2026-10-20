@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "life-simulator-film-studio",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd /Users/macbookairm4/Developer/life-simulator-film && npx remotion studio --port 3123 --no-open"],
+      "port": 3123
+    },
+    {
+      "name": "life-simulator-pitch",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd /Users/macbookairm4/Developer/life-simulator-pitch && npx slidev --port 3030 --bind 127.0.0.1"],
+      "port": 3030
+    }
+  ]
+}
