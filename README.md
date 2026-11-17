@@ -1,72 +1,97 @@
-# Ocean Opportunity Radar
+<div align="center">
 
-Evidence-led workspace for fund and accelerator analysts. Based on Lovable v7, extended locally.
+# 🌊 Ocean Opportunity Radar
 
-## Run
-Node.js 22+ recommended.
+Hi! This is my hackathon project for the **A’Pelago / Redstone** challenge.
+It helps people at ocean funds and accelerators decide what to do next with a startup, and every answer has a source you can check.
 
-    npm ci
-    npm run dev -- --host 127.0.0.1 --port 43189
+[![Try it](https://img.shields.io/badge/▶_Try_it-2CB67D?style=for-the-badge&labelColor=0D1117)](https://ocean-opportunity-radar.kirills-portfolio.workers.dev/)
+![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![OpenAI](https://img.shields.io/badge/OpenAI_API-412991?style=for-the-badge&logo=openai&logoColor=white)
+![Cloudflare](https://img.shields.io/badge/Cloudflare_Workers-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)
 
-Open http://127.0.0.1:43189/ . Profiles/facts are saved in this browser.
-Three built-in startups and their evidence are fictional. Additional profiles are analyst-entered.
+<img src="docs/media/hero.png" alt="Ocean Opportunity Radar: the startup overview with the radar of matched opportunities" width="900">
 
-## Live AI
-Copy .env.example to .env.local, set OPENAI_API_KEY there, then restart the dev server.
-Never put a secret in a VITE_ variable or browser field. Default model: gpt-6.1-sol (low reasoning effort).
-Production hosting needs these values as server secrets.
+</div>
 
-POST /api/extract uses the Responses API, strict JSON schema, store:false, timeout,
-same-origin checks, input limits and a per-instance request cap. Exact quotes must
-occur in the submitted text. Quote grounding does not establish factual truth.
-All suggestions start unconfirmed. The analyst must describe supporting evidence
-inspected before confirming imported claims. AI does not score, choose TRL or invent opportunities.
+## The idea
 
-POST /api/research uses OpenAI web search to investigate a real startup by name and
-optional website. It returns a short brief with clickable citations and a source list.
-The brief is a research lead only: it does not create confirmed facts or change scores.
-The result highlights a suggested proof request, offers a copyable draft, and lets the
-analyst move a cited public finding into the evidence review form as an unconfirmed
-claim. Recent research is kept in this browser tab during development refreshes.
-The endpoint has same-origin and input checks plus a small in-memory request cap.
+When you work at a fund or an accelerator, you look at a lot of ocean startups. For each one you have to figure out:
+how ready is it, which programme or investor fits it, and what should I ask the founders for next.
 
-Without a key, live AI reports a configuration error. The sample walkthrough is
-prepared fictional data, explicitly labelled as no AI call. Live provider extraction was tested once on 16 October 2026 with synthetic text: HTTP 200, exact quotes, paid pilot classified as unverified, and projected impact kept unmeasured. This is one smoke test, not a reliability benchmark.
+The problem is that AI tools are fast but they often make things up. So I wanted to build something where
+**AI can help you find information, but it can never change a score by itself.** A person checks the evidence first,
+and only then the decision changes. And the app always shows why.
 
-Before public AI access, add durable rate limiting/access controls: the current
-in-memory cap resets on restart and is separate for each server instance.
+## How it works
 
-Official implementation references:
-- https://developers.openai.com/api/docs/guides/structured-outputs?api-mode=responses
-- https://developers.openai.com/api/docs/models/gpt-6.1-sol
-- https://developers.openai.com/api/docs/guides/tools-web-search
+1. **Pick a startup** or add your own. There are 3 example startups (made up, for the demo).
+2. **Read the pitch with AI.** You paste a pitch and the AI pulls out claims, with the exact quote from the text.
+   All of them start as "not confirmed".
+3. **Research online.** It can look up a real startup on the web and give you a short summary with links to the sources.
+4. **Check the evidence.** You look at the proof, write what you checked and confirm it. Only now the scores move.
+5. **See what changed and why.** For example, after a paid pilot is confirmed, the best match for Baltic Nutriloop
+   switches from Helsinki Blue Economy Studio to Redstone, and the app explains which rule made that happen.
 
-## Demo
-1. Baltic Nutriloop → Reset demo if needed.
-2. Read pitch with AI → Sample walkthrough. Explain it is a prepared fictional example.
-3. Save the selected paid-pilot claim. Scores remain unchanged.
-4. Review next claim. Inspect the quote and evidence request. For this synthetic
-   walkthrough enter “Signed paid pilot agreement — fictional evidence checked for demo”
-   as supporting evidence, tick analyst confirmation and save.
-5. Show Helsinki → Redstone, BRL 4→5, checklist 2/4→3/4, unchanged TRL and impact.
-6. Open the fact and official source. Paying-customer preference is our rule, not Redstone's.
-7. Reset and reload to repeat.
+## Screenshots
 
-For real startups, choose Research online to find public leads before reviewing a pitch.
-The built-in demonstration startups are fictional and should not be searched as if real.
+<table>
+  <tr>
+    <td width="50%"><img src="docs/media/readiness.png" alt="Readiness: technology, business, investor checklist and measured ocean impact"></td>
+    <td width="50%"><img src="docs/media/opportunities.png" alt="Matched opportunities with status, deadline, requirements and why each one ranks where it does"></td>
+  </tr>
+  <tr>
+    <td><b>Readiness.</b> Tech readiness (TRL), business readiness, an investor checklist and ocean impact. They only change when confirmed evidence changes them.</td>
+    <td><b>Opportunities.</b> Real programmes and investors with links to their official pages. If something isn't known, it just says "unknown".</td>
+  </tr>
+</table>
 
-## Checks
-    npm test
-    npx tsc --noEmit
-    npm run build
+<p align="center"><img src="docs/media/mobile.png" alt="The app on a phone" width="260"><br/><sub>It works on phones too</sub></p>
 
-## Deployment and limits
-The inherited build produces Nitro Cloudflare-module output. Use the existing Lovable
-deployment workflow or a compatible server host. Static hosting cannot run the AI endpoint.
-This version is local and has not been publicly deployed.
-The catalog has three official entries with a subset of conditions, not full eligibility
-evaluations. Recheck official terms/deadlines. BRL is a simplified internal estimate;
-investor readiness is our own checklist. Impact is evidence of measurement, not an
-official 1–9 readiness scale.
+## Things I cared about
 
-See LOVABLE_HANDOFF.md for the detailed next development prompt.
+- **AI never decides alone.** AI suggestions stay "not confirmed" until a person checks them.
+- **No made up numbers.** If the app doesn't know something, it says "unknown" instead of guessing.
+- **Our rules vs official rules.** When something is our own preference (like "a paying customer first"), the app
+  says so, so it never looks like an official requirement.
+- **The quotes have to be real.** When the AI quotes a pitch, the quote must actually be in the text, or it gets rejected.
+- **Your API key stays on the server**, never in the browser.
+
+## What I used
+
+- React, TypeScript, TanStack Start, Tailwind
+- OpenAI API (structured outputs and web search)
+- Vitest for tests
+- Cloudflare Workers for hosting
+
+## Run it yourself
+
+You need Node.js 22+.
+
+```bash
+npm ci
+npm run dev
+```
+
+The AI features need an OpenAI key. Put `OPENAI_API_KEY=...` in `.env.local` and restart the dev server.
+Without a key the app still works, only the AI buttons show an error.
+
+```bash
+npm test          # tests
+npx tsc --noEmit  # type check
+npm run build     # production build
+```
+
+## Honest notes
+
+- The 3 startups in the demo are made up.
+- The catalog only has 3 real opportunities for now, and only some of their conditions. Always check the official pages.
+- Business readiness and the investor checklist are my own simple estimates, not official scales.
+
+More details are in [docs/VERIFICATION.md](docs/VERIFICATION.md) and [docs/ROADMAP.md](docs/ROADMAP.md).
+
+---
+
+Made by [Kirill](https://github.com/Ar7ti) · Feel free to try it and tell me what you think 👇
+[LinkedIn](https://www.linkedin.com/in/kirill-jegosin-807199412/)
